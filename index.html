@@ -6,10 +6,9 @@
     <title>Sifedin — Mobile & Web Developer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Devicons for tech logos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
 
-    <!-- ============================================================
-         STYLES.CSS — All styles embedded below
-    ============================================================ -->
     <style>
         /* === CSS VARIABLES === */
         :root {
@@ -323,55 +322,97 @@
         .progress-track { height: 5px; background: rgba(142,182,155,0.12); border-radius: var(--radius-full); overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--c4), var(--c5)); border-radius: var(--radius-full); width: 0; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
 
-        /* === SKILLS === */
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-        .skills-card {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: var(--radius-lg); padding: 32px;
-            backdrop-filter: blur(16px); transition: var(--transition);
-        }
-        .skills-card:hover { transform: translateY(-6px); border-color: rgba(142,182,155,0.35); box-shadow: var(--shadow), var(--shadow-glow); }
-        .skills-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
-        .skills-card-icon {
-            width: 48px; height: 48px; border-radius: var(--radius-md);
-            background: rgba(142,182,155,0.12); display: flex; align-items: center; justify-content: center;
-            color: var(--c5); font-size: 1.2rem; flex-shrink: 0;
-        }
-        .skills-card-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--white); }
-        .skills-bubbles { display: flex; flex-wrap: wrap; gap: 8px; }
-        .skill-bubble {
-            padding: 6px 14px; border-radius: var(--radius-full);
-            background: rgba(35,83,71,0.4); border: 1px solid rgba(142,182,155,0.2);
-            font-size: 0.78rem; color: var(--c6); font-weight: 500;
-            transition: var(--transition); cursor: default;
-        }
-        .skill-bubble:hover { background: rgba(142,182,155,0.2); border-color: var(--c5); color: var(--white); transform: translateY(-2px); }
-
-        /* === SIMPLE SKILLS === */
-        .simple-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            max-width: 800px;
+        /* ===================================================
+           SKILLS SECTION — Icon Cards Grid
+        =================================================== */
+        .skills-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 16px;
+            max-width: 900px;
             margin: 0 auto;
         }
-        .simple-skills .skill-bubble {
-            padding: 10px 22px;
-            border-radius: var(--radius-full);
-            background: rgba(35,83,71,0.35);
-            border: 1px solid rgba(142,182,155,0.2);
-            font-size: 0.875rem;
-            color: var(--c6);
-            font-weight: 500;
-            transition: var(--transition);
+
+        .skill-icon-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 24px 12px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
             cursor: default;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
         }
-        .simple-skills .skill-bubble:hover {
-            background: rgba(142,182,155,0.18);
-            border-color: var(--c5);
-            color: var(--white);
-            transform: translateY(-3px);
+
+        .skill-icon-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(142,182,155,0.06), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .skill-icon-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(142,182,155,0.4);
+            box-shadow: var(--shadow), 0 0 24px rgba(142,182,155,0.1);
+        }
+
+        .skill-icon-card:hover::before {
+            opacity: 1;
+        }
+
+        .skill-icon-card i,
+        .skill-icon-card .skill-svg {
+            font-size: 2.4rem;
+            line-height: 1;
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .skill-icon-card:hover i,
+        .skill-icon-card:hover .skill-svg {
+            transform: scale(1.15);
+        }
+
+        .skill-icon-card .skill-name {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+            line-height: 1.3;
+        }
+
+        .skill-icon-card:hover .skill-name {
+            color: var(--c6);
+        }
+
+        /* Devicon color overrides for brand colors */
+        .colored { color: inherit; }
+
+        /* SVG fallback icon for tools without devicon */
+        .skill-svg-wrap {
+            width: 2.4rem;
+            height: 2.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .skill-icon-card:hover .skill-svg-wrap {
+            transform: scale(1.15);
+        }
+        .skill-svg-wrap svg {
+            width: 100%;
+            height: 100%;
         }
 
         /* === PROJECTS === */
@@ -523,6 +564,7 @@
             .section { padding: 70px 0; }
             .projects-grid { grid-template-columns: 1fr; }
             .stats-row { gap: 6px; }
+            .skills-icon-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; }
         }
     </style>
 </head>
@@ -723,7 +765,7 @@
     </section>
 
     <!-- ============================================================
-         SKILLS SECTION — Simple
+         SKILLS SECTION — Icon + Name Cards
     ============================================================ -->
     <section id="skills" class="section">
         <div class="container">
@@ -731,27 +773,141 @@
                 <div class="section-label" style="justify-content:center;">Technical Skills</div>
                 <h2 class="section-title" style="margin-bottom:52px;">My Toolkit</h2>
             </div>
-            <div class="simple-skills reveal">
-                <span class="skill-bubble">HTML5</span>
-                <span class="skill-bubble">CSS3</span>
-                <span class="skill-bubble">JavaScript</span>
-                <span class="skill-bubble">Bootstrap</span>
-                <span class="skill-bubble">React.js</span>
-                <span class="skill-bubble">Tailwind</span>
-                <span class="skill-bubble">PHP</span>
-                <span class="skill-bubble">MySQL</span>
-                <span class="skill-bubble">Python</span>
-                <span class="skill-bubble">Node.js</span>
-                <span class="skill-bubble">REST APIs</span>
-                <span class="skill-bubble">Firebase</span>
-                <span class="skill-bubble">Flutter</span>
-                <span class="skill-bubble">Kotlin</span>
-                <span class="skill-bubble">Android Studio</span>
-                <span class="skill-bubble">Dart</span>
-                <span class="skill-bubble">Git & GitHub</span>
-                <span class="skill-bubble">VS Code</span>
-                <span class="skill-bubble">Figma</span>
-                <span class="skill-bubble">Postman</span>
+
+            <div class="skills-icon-grid reveal">
+
+                <!-- HTML5 -->
+                <div class="skill-icon-card">
+                    <i class="devicon-html5-plain colored" style="color:#E34F26;"></i>
+                    <span class="skill-name">HTML5</span>
+                </div>
+
+                <!-- CSS3 -->
+                <div class="skill-icon-card">
+                    <i class="devicon-css3-plain colored" style="color:#1572B6;"></i>
+                    <span class="skill-name">CSS3</span>
+                </div>
+
+                <!-- JavaScript -->
+                <div class="skill-icon-card">
+                    <i class="devicon-javascript-plain colored" style="color:#F7DF1E;"></i>
+                    <span class="skill-name">JavaScript</span>
+                </div>
+
+                <!-- Bootstrap -->
+                <div class="skill-icon-card">
+                    <i class="devicon-bootstrap-plain colored" style="color:#7952B3;"></i>
+                    <span class="skill-name">Bootstrap</span>
+                </div>
+
+                <!-- React.js -->
+                <div class="skill-icon-card">
+                    <i class="devicon-react-original colored" style="color:#61DAFB;"></i>
+                    <span class="skill-name">React.js</span>
+                </div>
+
+                <!-- Tailwind -->
+                <div class="skill-icon-card">
+                    <i class="devicon-tailwindcss-plain colored" style="color:#06B6D4;"></i>
+                    <span class="skill-name">Tailwind</span>
+                </div>
+
+                <!-- PHP -->
+                <div class="skill-icon-card">
+                    <i class="devicon-php-plain colored" style="color:#777BB4;"></i>
+                    <span class="skill-name">PHP</span>
+                </div>
+
+                <!-- MySQL -->
+                <div class="skill-icon-card">
+                    <i class="devicon-mysql-plain colored" style="color:#4479A1;"></i>
+                    <span class="skill-name">MySQL</span>
+                </div>
+
+                <!-- Python -->
+                <div class="skill-icon-card">
+                    <i class="devicon-python-plain colored" style="color:#3776AB;"></i>
+                    <span class="skill-name">Python</span>
+                </div>
+
+                <!-- Node.js -->
+                <div class="skill-icon-card">
+                    <i class="devicon-nodejs-plain colored" style="color:#339933;"></i>
+                    <span class="skill-name">Node.js</span>
+                </div>
+
+                <!-- REST APIs — FontAwesome fallback -->
+                <div class="skill-icon-card">
+                    <div class="skill-svg-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="20" stroke="#8EB69B" stroke-width="2.5" fill="none"/>
+                            <path d="M14 24h20M24 14v20" stroke="#8EB69B" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="24" cy="24" r="4" fill="#8EB69B"/>
+                        </svg>
+                    </div>
+                    <span class="skill-name">REST APIs</span>
+                </div>
+
+                <!-- Firebase -->
+                <div class="skill-icon-card">
+                    <i class="devicon-firebase-plain colored" style="color:#FFCA28;"></i>
+                    <span class="skill-name">Firebase</span>
+                </div>
+
+                <!-- Flutter -->
+                <div class="skill-icon-card">
+                    <i class="devicon-flutter-plain colored" style="color:#02569B;"></i>
+                    <span class="skill-name">Flutter</span>
+                </div>
+
+                <!-- Kotlin -->
+                <div class="skill-icon-card">
+                    <i class="devicon-kotlin-plain colored" style="color:#7F52FF;"></i>
+                    <span class="skill-name">Kotlin</span>
+                </div>
+
+                <!-- Android Studio -->
+                <div class="skill-icon-card">
+                    <i class="devicon-androidstudio-plain colored" style="color:#3DDC84;"></i>
+                    <span class="skill-name">Android Studio</span>
+                </div>
+
+                <!-- Dart -->
+                <div class="skill-icon-card">
+                    <i class="devicon-dart-plain colored" style="color:#0175C2;"></i>
+                    <span class="skill-name">Dart</span>
+                </div>
+
+                <!-- Git & GitHub -->
+                <div class="skill-icon-card">
+                    <i class="devicon-git-plain colored" style="color:#F05032;"></i>
+                    <span class="skill-name">Git & GitHub</span>
+                </div>
+
+                <!-- VS Code -->
+                <div class="skill-icon-card">
+                    <i class="devicon-vscode-plain colored" style="color:#007ACC;"></i>
+                    <span class="skill-name">VS Code</span>
+                </div>
+
+                <!-- Figma -->
+                <div class="skill-icon-card">
+                    <i class="devicon-figma-plain colored" style="color:#F24E1E;"></i>
+                    <span class="skill-name">Figma</span>
+                </div>
+
+                <!-- Postman -->
+                <div class="skill-icon-card">
+                    <div class="skill-svg-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="20" fill="#FF6C37" opacity="0.15"/>
+                            <path d="M16 24c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8" stroke="#FF6C37" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M24 20v8M20 24h8" stroke="#FF6C37" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="skill-name">Postman</span>
+                </div>
+
             </div>
         </div>
     </section>
@@ -919,7 +1075,7 @@
     </footer>
 
     <!-- ============================================================
-         SCRIPT.JS — All JavaScript embedded below
+         SCRIPT
     ============================================================ -->
     <script>
         /* === CUSTOM CURSOR === */
@@ -942,7 +1098,7 @@
         }
         animateRing();
 
-        document.querySelectorAll('a,button,.skill-bubble,.project-card').forEach(el => {
+        document.querySelectorAll('a,button,.skill-icon-card,.project-card').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 dot.style.width = '14px'; dot.style.height = '14px';
                 ring.style.width = '48px'; ring.style.height = '48px';
@@ -964,7 +1120,6 @@
             if (window.scrollY > 40) navbar.classList.add('scrolled');
             else navbar.classList.remove('scrolled');
 
-            // Active nav link
             let current = '';
             sections.forEach(s => {
                 if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
