@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Gallery | Sifedin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --c1:#051F20;--c2:#0B2B26;--c3:#163832;--c4:#235347;--c5:#8EB69B;--c6:#DAF1DE;
+            --white:#FFFFFF;--text-muted:rgba(218,241,222,0.65);
+            --card-bg:rgba(11,43,38,0.6);--card-border:rgba(142,182,155,0.15);
+            --font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+            --radius-full:9999px;--radius-lg:32px;--radius-md:20px;--radius-sm:12px;
+            --shadow:0 8px 40px rgba(5,31,32,0.5);--transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:var(--font-body);background:var(--c1);color:var(--c6);overflow-x:hidden;}
+        ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--c1);}
+        ::-webkit-scrollbar-thumb{background:var(--c4);border-radius:var(--radius-full);}
+
+        /* Noise */
+        body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+        .container{max-width:1100px;margin:0 auto;padding:0 32px;}
+
+        /* Navbar */
+        .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(5,31,32,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--card-border);}
+        .nav-container{max-width:1100px;margin:0 auto;padding:18px 32px;display:flex;justify-content:space-between;align-items:center;}
+        .nav-brand{font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px;}
+        .nav-brand-dot{width:9px;height:9px;background:var(--c5);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite;}
+        @keyframes pulse-dot{0%,100%{transform:scale(1);}50%{transform:scale(1.4);opacity:0.7;}}
+        .back-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:var(--radius-full);background:rgba(142,182,155,0.1);border:1px solid var(--card-border);color:var(--c5);text-decoration:none;font-size:0.85rem;font-weight:600;transition:var(--transition);}
+        .back-btn:hover{background:rgba(142,182,155,0.2);border-color:var(--c5);}
+
+        /* Hero */
+        .gallery-hero{padding:120px 0 5px;position:relative;overflow:hidden;}
+        .hero-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.2;pointer-events:none;}
+        .hero-orb-1{width:400px;height:400px;background:var(--c4);top:-80px;right:-80px;animation:float-orb 8s ease-in-out infinite;}
+        @keyframes float-orb{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-20px);}}
+
+        .app-header{display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;}
+        .app-icon{width:88px;height:88px;border-radius:24px;background:linear-gradient(135deg,var(--c3),var(--c4));display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--c5);flex-shrink:0;border:1px solid var(--card-border);overflow:hidden;}
+        .app-icon img{width:100%;height:100%;object-fit:cover;}
+        .app-meta{}
+        .app-category{font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--c5);margin-bottom:8px;}
+        .app-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--white);margin-bottom:12px;line-height:1.15;}
+        .app-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+        .tag{padding:5px 14px;border-radius:var(--radius-full);background:rgba(142,182,155,0.1);border:1px solid rgba(142,182,155,0.2);font-size:0.78rem;color:var(--c5);font-weight:500;}
+        .app-buttons{display:flex;gap:12px;flex-wrap:wrap;}
+
+        .btn-primary{background:var(--c5);color:var(--c1);padding:13px 28px;border-radius:var(--radius-full);font-weight:700;font-size:0.875rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:var(--transition);border:none;cursor:pointer;font-family:var(--font-body);}
+        .btn-primary:hover{background:var(--c6);transform:translateY(-3px);box-shadow:0 10px 28px rgba(142,182,155,0.35);}
+        .btn-outline{background:transparent;color:var(--c5);padding:12px 28px;border-radius:var(--radius-full);font-weight:600;font-size:0.875rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:var(--transition);border:1.5px solid rgba(142,182,155,0.4);cursor:pointer;font-family:var(--font-body);}
+        .btn-outline:hover{background:rgba(142,182,155,0.1);border-color:var(--c5);transform:translateY(-3px);}
+
+        /* Description */
+        .app-description-section{padding:20px 0px 30px 0px;}
+        .section-label{display:inline-flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--c5);margin-bottom:16px;}
+        .section-label::before{content:'';width:24px;height:1.5px;background:var(--c5);}
+        .app-description{font-size:1rem;color:var(--text-muted);line-height:1.85;margin-bottom:10px;max-width:700px;}
+
+        /* Features */
+        .features-grid{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;}
+        .feature-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius-full);background:rgba(35,83,71,0.35);border:1px solid rgba(142,182,155,0.2);font-size:0.85rem;color:var(--c6);font-weight:500;}
+        .feature-chip i{color:var(--c5);font-size:0.75rem;}
+
+        /* Gallery */
+        .gallery-section{padding:0 0 100px;}
+        .gallery-title{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:32px;}
+        .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
+        .gallery-item{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--card-border);background:var(--c2);cursor:pointer;transition:var(--transition);aspect-ratio:9/16;position:relative;}
+        .gallery-item:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(142,182,155,0.4);box-shadow:var(--shadow),0 0 40px rgba(142,182,155,0.1);}
+        .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;}
+        .gallery-item:hover img{transform:scale(1.05);}
+        .gallery-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--c5);font-size:2.5rem;min-height:300px;}
+        .gallery-placeholder p{font-size:0.8rem;color:var(--text-muted);font-size:0.8rem;}
+
+        /* Lightbox */
+        .lightbox{position:fixed;inset:0;background:rgba(5,31,32,0.95);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;backdrop-filter:blur(8px);}
+        .lightbox.open{opacity:1;pointer-events:all;}
+        .lightbox img{max-height:90vh;max-width:90vw;border-radius:var(--radius-lg);object-fit:contain;box-shadow:var(--shadow);}
+        .lightbox-close{position:absolute;top:24px;right:24px;width:44px;height:44px;border-radius:50%;background:rgba(142,182,155,0.15);border:1px solid var(--card-border);color:var(--c5);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
+        .lightbox-close:hover{background:rgba(142,182,155,0.3);}
+        .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(142,182,155,0.15);border:1px solid var(--card-border);color:var(--c5);font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
+        .lightbox-nav:hover{background:rgba(142,182,155,0.3);}
+        .lightbox-prev{left:24px;}
+        .lightbox-next{right:24px;}
+
+        /* Not found */
+        .not-found{text-align:center;padding:120px 0;color:var(--text-muted);}
+        .not-found i{font-size:3rem;color:var(--c4);margin-bottom:16px;display:block;}
+        .not-found h2{font-family:var(--font-display);font-size:1.8rem;color:var(--white);margin-bottom:12px;}
+
+        @media(max-width:600px){.container{padding:0 20px;}.app-header{flex-direction:column;}.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+    </style>
+</head>
+<body>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lbClose"><i class="fas fa-times"></i></button>
+    <button class="lightbox-nav lightbox-prev" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
+    <img src="" alt="" id="lbImg">
+    <button class="lightbox-nav lightbox-next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-brand"><div class="nav-brand-dot"></div>Sifedin</a>
+        <a href="projects.html" class="back-btn"><i class="fas fa-arrow-left"></i> All Projects</a>
+    </div>
+</nav>
+
+<div id="pageContent"></div>
+
+<script>
+    /* === PROJECT DATA (same as projects.html — keep in sync) === */
+    const projectsData = [
+        {
+            id: 10, title: "Taxi Meter App", category: "mobile",
+            icon: "./myPic/taxo_logo.png",
+            tags: ["Kotlin", "Google Maps API", "Authentication & Firestore", "Google Play Services"],
+            githubUrl: "https://github.com/sifedine01/TaxoApp", apkUrl: "./apk/TAXO.apk",
+            galleryDescription: "A professional taxi meter application for drivers to track rides, calculate fares, and manage trips in real-time. Built with Kotlin for native Android performance, featuring GPS tracking, automated fare calculation, and Firebase integration for driver authentication and data management.",
+            galleryFeatures: ["Real-time GPS Tracking", "Automated Fare Calculation", "Ride Timer & Distance Tracking", "Full-Screen Meter Display", "Driver Profile Management", "Firebase Authentication & Firestore"],
+            gallery: [
+                "./myPic/Taxo_login.jpeg",
+                "./myPic/Taxo_main.jpeg",
+                "./myPic/Taxo_landscape.jpeg",
+                "./myPic/Taxo_profile.jpeg"
+            ]
+        },
+        {
+            id: 11, title: "Food Delivery App", category: "mobile",
+            icon: "fas fa-utensils",
+            tags: ["React Native", "Google Maps", "Stripe", "Firebase"],
+            githubUrl: "#", apkUrl: null,
+            galleryDescription: "A complete food delivery platform with real-time order tracking, payment integration, and a restaurant management system. Delivers a smooth, fast ordering experience.",
+            galleryFeatures: ["Real-time Tracking", "Stripe Payments", "Restaurant Dashboard", "Push Notifications", "Order History", "Ratings & Reviews"],
+            gallery: []
+        },
+        {
+            id: 12, title: "Social Media App", category: "mobile",
+            icon: "fas fa-camera",
+            tags: ["React Native", "Socket.io", "AWS S3", "Push Notifications"],
+            githubUrl: "#", apkUrl: null,
+            galleryDescription: "An Instagram-like social media app with photo sharing, stories, direct messaging, and real-time notifications — built for speed and community.",
+            galleryFeatures: ["Photo Sharing", "Stories", "Direct Messaging", "Real-time Notifications", "Explore Feed", "Profile Customization"],
+            gallery: []
+        },
+        {
+            id: 13, title: "Travel Companion App", category: "mobile",
+            icon: "fas fa-plane",
+            tags: ["React Native", "Google Maps", "Booking API", "Offline Storage"],
+            githubUrl: "#", apkUrl: null,
+            galleryDescription: "A travel planning app with full itinerary management, hotel and flight booking integration, offline maps, and smart local recommendations.",
+            galleryFeatures: ["Itinerary Builder", "Booking Integration", "Offline Maps", "Local Recommendations", "Currency Converter", "Travel Notes"],
+            gallery: []
+        },
+        {
+            id: 14, title: "Learning Management App", category: "mobile",
+            icon: "fas fa-graduation-cap",
+            tags: ["React Native", "Video Streaming", "MongoDB", "AWS"],
+            githubUrl: "#", apkUrl: null,
+            galleryDescription: "An educational platform with video courses, interactive quizzes, progress tracking, and certificate generation — making learning accessible anywhere.",
+            galleryFeatures: ["Video Courses", "Interactive Quizzes", "Progress Tracking", "Certificates", "Offline Downloads", "Discussion Forums"],
+            gallery: []
+        }
+    ];
+
+    /* === READ URL PARAM === */
+    const params = new URLSearchParams(window.location.search);
+    const appId = parseInt(params.get('id'));
+    const project = projectsData.find(p => p.id === appId);
+    const content = document.getElementById('pageContent');
+
+    if (!project) {
+        content.innerHTML = `
+            <div class="not-found">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Project Not Found</h2>
+                <p>The project you're looking for doesn't exist.</p>
+                <br><a href="projects.html" class="btn-primary" style="display:inline-flex;margin-top:16px;"><i class="fas fa-arrow-left"></i> Back to Projects</a>
+            </div>`;
+    } else {
+        document.title = `${project.title} | Sifedin`;
+
+        const apkBtn = project.apkUrl
+            ? `<a href="${project.apkUrl}" download class="btn-primary"><i class="fas fa-download"></i> Install APK</a>`
+            : `<button class="btn-primary" onclick="notify('APK will be available soon!')"><i class="fas fa-download"></i> Install APK</button>`;
+
+        const codeBtn = project.githubUrl !== '#'
+            ? `<a href="${project.githubUrl}" target="_blank" class="btn-outline"><i class="fab fa-github"></i> Source Code</a>`
+            : `<button class="btn-outline" onclick="notify('Source code coming soon!')"><i class="fab fa-github"></i> Source Code</button>`;
+
+        const galleryHtml = project.gallery && project.gallery.length > 0
+            ? project.gallery.map((src, i) => `
+                <div class="gallery-item" onclick="openLightbox(${i})">
+                    <img src="${src}" alt="${project.title} screenshot ${i+1}">
+                </div>`).join('')
+            : `<div class="gallery-placeholder" style="grid-column:1/-1;min-height:300px;flex-direction:column;">
+                <i class="fas fa-image"></i>
+                <p>Screenshots coming soon</p>
+               </div>`;
+
+        const featuresHtml = (project.galleryFeatures || []).map(f =>
+            `<div class="feature-chip"><i class="fas fa-check"></i>${f}</div>`
+        ).join('');
+
+        const iconHtml = project.icon.startsWith('fa') ? `<i class="${project.icon}"></i>` : `<img src="${project.icon}" alt="${project.title} icon">`;
+
+        content.innerHTML = `
+            <!-- HERO -->
+            <section class="gallery-hero">
+                <div class="hero-orb hero-orb-1"></div>
+                <div class="container">
+                    <div class="app-header">
+                        <div class="app-icon">${iconHtml}</div>
+                        <div class="app-meta">
+                            <div class="app-category">Mobile Application</div>
+                            <h1 class="app-title">${project.title}</h1>
+                            <div class="app-tags">${project.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+                            <div class="app-buttons">${apkBtn}${codeBtn}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DESCRIPTION -->
+            <section class="app-description-section">
+                <div class="container">
+                    <div class="section-label">About this app</div>
+                    <p class="app-description">${project.galleryDescription}</p>
+                    ${featuresHtml ? `<div class="section-label" style="margin-top:32px;">Key Features</div><div class="features-grid">${featuresHtml}</div>` : ''}
+                </div>
+            </section>
+
+            <!-- GALLERY -->
+            <section class="gallery-section">
+                <div class="container">
+                    <div class="gallery-title">App Screenshots</div>
+                    <div class="gallery-grid">${galleryHtml}</div>
+                </div>
+            </section>
+        `;
+    }
+
+    /* === LIGHTBOX === */
+    let currentImg = 0;
+    const imgs = (project && project.gallery) ? project.gallery : [];
+
+    function openLightbox(index) {
+        if (!imgs.length) return;
+        currentImg = index;
+        document.getElementById('lbImg').src = imgs[currentImg];
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('lbClose').onclick = () => {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    };
+    document.getElementById('lbPrev').onclick = () => {
+        currentImg = (currentImg - 1 + imgs.length) % imgs.length;
+        document.getElementById('lbImg').src = imgs[currentImg];
+    };
+    document.getElementById('lbNext').onclick = () => {
+        currentImg = (currentImg + 1) % imgs.length;
+        document.getElementById('lbImg').src = imgs[currentImg];
+    };
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) { this.classList.remove('open'); document.body.style.overflow = ''; }
+    });
+    document.addEventListener('keydown', e => {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'Escape') { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+        if (e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
+        if (e.key === 'ArrowRight') document.getElementById('lbNext').click();
+    });
+
+    /* === NOTIFICATION === */
+    function notify(msg) {
+        const el = document.createElement('div');
+        el.style.cssText = `position:fixed;top:24px;right:24px;z-index:99998;background:#163832;border:1px solid rgba(142,182,155,0.2);border-radius:20px;padding:14px 20px;color:#DAF1DE;font-size:0.875rem;font-weight:500;transform:translateX(120%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;gap:10px;backdrop-filter:blur(16px);box-shadow:0 8px 40px rgba(5,31,32,0.5);font-family:'DM Sans',sans-serif;`;
+        el.innerHTML = `<i class="fas fa-info-circle" style="color:#8EB69B;"></i>${msg}`;
+        document.body.appendChild(el);
+        setTimeout(() => el.style.transform = 'translateX(0)', 10);
+        setTimeout(() => { el.style.transform = 'translateX(120%)'; setTimeout(() => el.remove(), 400); }, 3000);
+    }
+</script>
+</body>
+</html>

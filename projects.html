@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Projects | Sifedin — Mobile & Web Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- ============================================================
+         STYLES.CSS — All styles embedded below (same design system as index.html)
+    ============================================================ -->
+    <style>
+        /* === CSS VARIABLES === */
+        :root {
+            --c1: #051F20;
+            --c2: #0B2B26;
+            --c3: #163832;
+            --c4: #235347;
+            --c5: #8EB69B;
+            --c6: #DAF1DE;
+            --white: #FFFFFF;
+            --text-muted: rgba(218,241,222,0.65);
+            --card-bg: rgba(11,43,38,0.6);
+            --card-border: rgba(142,182,155,0.15);
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --radius-xl: 48px;
+            --radius-full: 9999px;
+            --shadow: 0 8px 40px rgba(5,31,32,0.5);
+            --shadow-glow: 0 0 40px rgba(142,182,155,0.15);
+            --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--c1); color: var(--c6); line-height: 1.6; overflow-x: hidden; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--c1); }
+        ::-webkit-scrollbar-thumb { background: var(--c4); border-radius: var(--radius-full); }
+
+        /* Noise overlay */
+        body::before {
+            content: ''; position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999; opacity: 0.4;
+        }
+
+        /* Cursor */
+        .cursor-dot { position: fixed; width: 8px; height: 8px; background: var(--c5); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s; }
+        .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1.5px solid rgba(142,182,155,0.5); border-radius: 50%; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+        /* === NAVBAR === */
+        .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: var(--transition); }
+        .navbar.scrolled { background: rgba(5,31,32,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid var(--card-border); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--white); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-brand-dot { width: 10px; height: 10px; background: var(--c5); border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100% { transform: scale(1); } 50% { transform: scale(1.4); opacity: 0.7; } }
+        .nav-links { display: flex; list-style: none; gap: 8px; align-items: center; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem; padding: 8px 18px; border-radius: var(--radius-full); transition: var(--transition); }
+        .nav-links a:hover, .nav-links a.active { color: var(--white); background: rgba(142,182,155,0.12); }
+        .cta-btn { background: var(--c5); color: var(--c1); border: none; padding: 10px 24px; border-radius: var(--radius-full); font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: var(--transition); font-family: var(--font-body); }
+        .cta-btn:hover { background: var(--c6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(142,182,155,0.3); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--c5); border-radius: 2px; transition: var(--transition); }
+        .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+        /* === PROJECTS PAGE HEADER === */
+        .page-hero {
+            padding: 160px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero-orb {
+            position: absolute; border-radius: 50%; pointer-events: none;
+            filter: blur(80px); opacity: 0.2;
+        }
+        .page-hero-orb-1 { width: 500px; height: 500px; background: var(--c4); top: -100px; right: -100px; animation: float-orb 8s ease-in-out infinite; }
+        .page-hero-orb-2 { width: 300px; height: 300px; background: var(--c3); bottom: -50px; left: -50px; animation: float-orb 10s ease-in-out infinite reverse; }
+        @keyframes float-orb { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px,-20px); } }
+
+        .page-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c5); margin-bottom: 16px; }
+        .page-label::before, .page-label::after { content: ''; width: 24px; height: 1.5px; background: var(--c5); }
+
+        .page-title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: var(--white); margin-bottom: 16px; }
+        .page-title .accent { color: var(--c5); }
+        .page-subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 520px; margin: 0 auto 48px; line-height: 1.7; }
+
+        /* === FILTER BUTTONS === */
+        .filter-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 64px; }
+        .filter-btn {
+            padding: 10px 24px; border-radius: var(--radius-full);
+            background: rgba(142,182,155,0.06); border: 1px solid var(--card-border);
+            color: var(--text-muted); font-family: var(--font-body); font-size: 0.875rem;
+            font-weight: 600; cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .filter-btn:hover { background: rgba(142,182,155,0.12); color: var(--c5); border-color: rgba(142,182,155,0.3); }
+        .filter-btn.active { background: var(--c5); color: var(--c1); border-color: var(--c5); }
+
+        /* === PROJECTS GRID === */
+        .projects-section { padding: 0 0 100px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; }
+
+        .project-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg); overflow: hidden;
+            backdrop-filter: blur(16px); transition: var(--transition);
+            position: relative;
+            animation: fade-up 0.5s ease both;
+        }
+        .project-card:hover { transform: translateY(-8px); border-color: rgba(142,182,155,0.4); box-shadow: var(--shadow), 0 0 50px rgba(142,182,155,0.12); }
+
+        .project-img-wrap { height: 200px; overflow: hidden; position: relative; background: linear-gradient(135deg, var(--c2), var(--c3)); }
+        .project-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .project-card:hover .project-img-wrap img { transform: scale(1.06); }
+        .project-icon-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: var(--c5); }
+
+        .project-category-badge { position: absolute; top: 14px; left: 14px; background: rgba(5,31,32,0.85); border: 1px solid var(--card-border); border-radius: var(--radius-full); padding: 4px 12px; font-size: 0.72rem; color: var(--c5); font-weight: 600; backdrop-filter: blur(8px); letter-spacing: 0.06em; text-transform: uppercase; }
+
+        .project-content { padding: 28px; }
+        .project-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+        .project-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+        .tag { padding: 4px 12px; border-radius: var(--radius-full); background: rgba(142,182,155,0.1); border: 1px solid rgba(142,182,155,0.2); font-size: 0.75rem; color: var(--c5); font-weight: 500; }
+        .project-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-sm { padding: 9px 20px; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); font-family: var(--font-body); border: none; cursor: pointer; }
+        .btn-sm-primary { background: var(--c5); color: var(--c1); }
+        .btn-sm-primary:hover { background: var(--c6); transform: translateY(-2px); }
+        .btn-sm-outline { background: transparent; color: var(--c5); border: 1.5px solid rgba(142,182,155,0.35); }
+        .btn-sm-outline:hover { background: rgba(142,182,155,0.1); border-color: var(--c5); transform: translateY(-2px); }
+
+        /* === FOOTER === */
+        .footer { border-top: 1px solid var(--card-border); padding: 40px 0; }
+        .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+        .footer-brand { font-family: var(--font-display); font-weight: 700; color: var(--white); font-size: 1.1rem; }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; transition: var(--transition); }
+        .footer-links a:hover { color: var(--c5); }
+        .footer-social { display: flex; gap: 12px; }
+        .footer-social a { width: 36px; height: 36px; border-radius: 50%; background: rgba(142,182,155,0.08); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; font-size: 0.8rem; transition: var(--transition); }
+        .footer-social a:hover { background: rgba(142,182,155,0.18); color: var(--c5); border-color: var(--c5); transform: translateY(-2px); }
+        .footer-copy { margin-top: 24px; font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+
+        /* === NOTIFICATION === */
+        .notif { position: fixed; top: 24px; right: 24px; z-index: 9998; background: var(--c3); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 14px 20px; color: var(--c6); font-size: 0.875rem; font-weight: 500; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; gap: 10px; max-width: 320px; backdrop-filter: blur(16px); box-shadow: var(--shadow); }
+        .notif.show { transform: translateX(0); }
+        .notif-icon { color: var(--c5); font-size: 1rem; flex-shrink: 0; }
+
+        /* === ANIMATIONS === */
+        @keyframes fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(5,31,32,0.98); flex-direction: column; padding: 20px; gap: 4px; border-bottom: 1px solid var(--card-border); }
+            .nav-links.open { display: flex; }
+            .hamburger { display: flex; }
+            .nav-container { position: relative; }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 0 20px; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <div class="notif" id="notif">
+        <i class="fas fa-info-circle notif-icon" id="notifIcon"></i>
+        <span id="notifText"></span>
+    </div>
+
+    <!-- ============================================================
+         NAVBAR
+    ============================================================ -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <div class="nav-brand-dot"></div>
+                Sifedin
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="cta-btn" onclick="window.location.href='index.html#contact'">Get In Touch</button>
+                <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+         PAGE HERO
+    ============================================================ -->
+    <section class="page-hero">
+        <div class="page-hero-orb page-hero-orb-1"></div>
+        <div class="page-hero-orb page-hero-orb-2"></div>
+        <div class="container">
+            <div class="page-label">Portfolio</div>
+            <h1 class="page-title">All <span class="accent">Projects</span></h1>
+            <p class="page-subtitle">Explore my complete portfolio of mobile and web development projects — from concept to deployment.</p>
+            <div class="filter-row">
+                <button class="filter-btn active" data-filter="all"><i class="fas fa-th"></i> All Projects</button>
+                <button class="filter-btn" data-filter="mobile"><i class="fas fa-mobile-alt"></i> Mobile Apps</button>
+                <button class="filter-btn" data-filter="web"><i class="fas fa-globe"></i> Web Apps</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         PROJECTS GRID
+    ============================================================ -->
+    <section class="projects-section">
+        <div class="container">
+            <div id="projectsGrid" class="projects-grid"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+    ============================================================ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">Sifedin <span style="color:var(--c5);">.</span></div>
+                <div class="footer-links">
+                    <a href="index.html#about">About</a>
+                    <a href="projects.html">Projects</a>
+                    <a href="index.html#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/sifedine01" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/sifedin-bammarouf-3b8750370" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-copy">&copy; 2025 Sifedin Bammarouf — Built with passion in Morocco 🌿</div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+         PROJECTS.JS — All JavaScript embedded below
+    ============================================================ -->
+    <script>
+        /* === PROJECT DATA === */
+        const projectsData = [
+            {
+                id: 1, title: "Kaser Diafa Restaurant", category: "web",
+                description: "Kaser Diafa is a family-owned restaurant system bringing authentic Moroccan and Mediterranean cuisine online. Full reservation and menu management.",
+                image: "../projects/kaserDiafa.png", icon: "fas fa-utensils",
+                tags: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
+                liveUrl: "https://kaserdiafa.free.nf/",
+                githubUrl: "https://github.com/sifedine01/kaserdiafa-restaurant-system"
+            },
+            {
+                id: 2, title: "Touriste Platform", category: "web",
+                description: "A tourism platform showcasing destinations with elegant, responsive design. Built with Bootstrap for a seamless user experience.",
+                image: "../projects/Touriste.png", icon: "fas fa-globe",
+                tags: ["HTML", "CSS", "Bootstrap"],
+                liveUrl: "https://sifedine01.github.io/Tourist-Website/",
+                githubUrl: "https://github.com/sifedine01/Tourist-Website"
+            },
+            {
+                id: 3, title: "Company Portal", category: "web",
+                description: "An internal company portal for leave management and team collaboration built with HTML, CSS, JavaScript and Bootstrap.",
+                image: "../projects/company portal.png", icon: "fas fa-building",
+                tags: ["HTML", "CSS", "JavaScript", "Bootstrap"],
+                liveUrl: "https://sifedine01.github.io/gestion-des-conges/",
+                githubUrl: "https://github.com/sifedine01/gestion-des-conges"
+            },
+            {
+                id: 4, title: "Real Estate Portal", category: "web",
+                description: "Property listing platform with advanced search filters, virtual tours, mortgage calculator, and agent management system.",
+                image: null, icon: "fas fa-home",
+                tags: ["React.js", "Node.js", "PostgreSQL", "Google Maps"],
+                liveUrl: "#", githubUrl: "#"
+            },
+            {
+                id: 5, title: "Healthcare Dashboard", category: "web",
+                description: "Medical management system with patient records, appointment scheduling, billing, and an analytics dashboard.",
+                image: null, icon: "fas fa-heartbeat",
+                tags: ["React.js", "Node.js", "MongoDB", "Chart.js"],
+                liveUrl: "#", githubUrl: "#"
+            },
+            {
+                id: 6, title: "E-Commerce Platform", category: "web",
+                description: "Complete online store with product catalog, shopping cart, payment processing, and an admin dashboard.",
+                image: null, icon: "fas fa-store",
+                tags: ["React.js", "Node.js", "Stripe", "MongoDB"],
+                liveUrl: "#", githubUrl: "#"
+            },
+            {
+                id: 7, title: "Project Management Tool", category: "web",
+                description: "Team collaboration platform with project tracking, time management, resource allocation, and reporting.",
+                image: null, icon: "fas fa-project-diagram",
+                tags: ["React.js", "Node.js", "Socket.io", "PostgreSQL"],
+                liveUrl: "#", githubUrl: "#"
+            },
+            {
+                id: 8, title: "Analytics Dashboard", category: "web",
+                description: "Data visualization platform with real-time charts, custom reports, data export, and user management.",
+                image: null, icon: "fas fa-chart-line",
+                tags: ["React.js", "D3.js", "Node.js", "MongoDB"],
+                liveUrl: "#", githubUrl: "#"
+            },
+            {
+                id: 9, title: "Blog Platform", category: "web",
+                description: "Content management system with rich text editor, SEO optimization, comment system, and analytics.",
+                image: null, icon: "fas fa-blog",
+                tags: ["React.js", "Node.js", "MongoDB", "AWS S3"],
+                liveUrl: "#", githubUrl: "#"
+            },
+            {
+                id: 10, title: "Taxi Meter App", category: "mobile",
+                description: "A professional taxi meter application for drivers to track rides, calculate fares, and manage trips in real-time with GPS tracking and Firebase integration.",
+                image: "./myPic/Taxo_profile_logo.jpeg", icon: "./myPic/taxo_logo.png",
+                tags: ["Kotlin", "Google Maps API", "Authentication & Firestore", "Google Play Services"],
+                liveUrl: "#", githubUrl: "#",
+                apkUrl: "./apk/TAXO.apk",
+                gallery: [
+                    "./myPic/Taxo_login.jpeg",
+                    "./myPic/Taxo_main.jpeg",
+                    "./myPic/Taxo_landscape.jpeg",
+                    "./myPic/Taxo_profile.jpeg"
+                ],
+                galleryDescription: "A professional taxi meter application for drivers to track rides, calculate fares, and manage trips in real-time. Built with Kotlin for native Android performance, featuring GPS tracking, automated fare calculation, and Firebase integration for driver authentication and data management.",
+                galleryFeatures: ["Real-time GPS Tracking", "Automated Fare Calculation", "Ride Timer & Distance Tracking", "Full-Screen Meter Display", "Driver Profile Management", "Firebase Authentication & Firestore"]
+            },
+            {
+                id: 11, title: "Food Delivery App", category: "mobile",
+                description: "Complete food delivery platform with real-time tracking, payment integration, and restaurant management system.",
+                image: null, icon: "fas fa-utensils",
+                tags: ["React Native", "Google Maps", "Stripe", "Firebase"],
+                liveUrl: "#", githubUrl: "#",
+                apkUrl: null,
+                gallery: [],
+                galleryDescription: "A complete food delivery platform with real-time order tracking, payment integration, and a restaurant management system. Delivers a smooth, fast ordering experience.",
+                galleryFeatures: ["Real-time Tracking", "Stripe Payments", "Restaurant Dashboard", "Push Notifications", "Order History", "Ratings & Reviews"]
+            },
+            {
+                id: 12, title: "Social Media App", category: "mobile",
+                description: "Instagram-like social media app with photo sharing, stories, direct messaging, and real-time notifications.",
+                image: null, icon: "fas fa-camera",
+                tags: ["React Native", "Socket.io", "AWS S3", "Push Notifications"],
+                liveUrl: "#", githubUrl: "#",
+                apkUrl: null,
+                gallery: [],
+                galleryDescription: "An Instagram-like social media app with photo sharing, stories, direct messaging, and real-time notifications — built for speed and community.",
+                galleryFeatures: ["Photo Sharing", "Stories", "Direct Messaging", "Real-time Notifications", "Explore Feed", "Profile Customization"]
+            },
+            {
+                id: 13, title: "Travel Companion App", category: "mobile",
+                description: "Travel planning app with itinerary management, booking integration, offline maps, and local recommendations.",
+                image: null, icon: "fas fa-plane",
+                tags: ["React Native", "Google Maps", "Booking API", "Offline Storage"],
+                liveUrl: "#", githubUrl: "#",
+                apkUrl: null,
+                gallery: [],
+                galleryDescription: "A travel planning app with full itinerary management, hotel and flight booking integration, offline maps, and smart local recommendations.",
+                galleryFeatures: ["Itinerary Builder", "Booking Integration", "Offline Maps", "Local Recommendations", "Currency Converter", "Travel Notes"]
+            },
+            {
+                id: 14, title: "Learning Management App", category: "mobile",
+                description: "Educational platform with video courses, progress tracking, quizzes, and certificate generation.",
+                image: null, icon: "fas fa-graduation-cap",
+                tags: ["React Native", "Video Streaming", "MongoDB", "AWS"],
+                liveUrl: "#", githubUrl: "#",
+                apkUrl: null,
+                gallery: [],
+                galleryDescription: "An educational platform with video courses, interactive quizzes, progress tracking, and certificate generation — making learning accessible anywhere.",
+                galleryFeatures: ["Video Courses", "Interactive Quizzes", "Progress Tracking", "Certificates", "Offline Downloads", "Discussion Forums"]
+            }
+        ];
+
+        /* === RENDER PROJECTS === */
+        const grid = document.getElementById('projectsGrid');
+        let currentFilter = 'all';
+
+        function renderProjects(filter) {
+            const filtered = filter === 'all' ? projectsData : projectsData.filter(p => p.category === filter);
+            grid.innerHTML = '';
+            filtered.forEach((p, i) => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.style.animationDelay = (i * 0.07) + 's';
+                card.setAttribute('data-category', p.category);
+
+                const imageHtml = p.image
+                    ? `<img src="${p.image}" alt="${p.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                       <div class="project-icon-placeholder" style="display:none;">${p.icon.startsWith('fa') ? `<i class="${p.icon}"></i>` : `<img src="${p.icon}" alt="${p.title} icon" style="width:80px;height:80px;object-fit:contain;">`}</div>`
+                    : `<div class="project-icon-placeholder">${p.icon.startsWith('fa') ? `<i class="${p.icon}"></i>` : `<img src="${p.icon}" alt="${p.title} icon" style="width:80px;height:80px;object-fit:contain;">`}</div>`;
+
+                let buttonsHtml = '';
+
+                if (p.category === 'mobile') {
+                    // Mobile app buttons
+                    const photosBtn = `<a href="app-gallery.html?id=${p.id}" class="btn-sm btn-sm-primary"><i class="fas fa-images"></i> App Photos</a>`;
+                    const codeBtn = p.githubUrl !== '#'
+                        ? `<a href="${p.githubUrl}" target="_blank" class="btn-sm btn-sm-outline"><i class="fab fa-github"></i> Code</a>`
+                        : `<button class="btn-sm btn-sm-outline" onclick="showNotif('Source code coming soon!','info')"><i class="fab fa-github"></i> Code</button>`;
+                    const apkBtn = p.apkUrl
+                        ? `<a href="${p.apkUrl}" download class="btn-sm btn-sm-outline"><i class="fas fa-download"></i> APK</a>`
+                        : `<button class="btn-sm btn-sm-outline" onclick="showNotif('APK coming soon!','info')"><i class="fas fa-download"></i> APK</button>`;
+                    buttonsHtml = photosBtn + codeBtn + apkBtn;
+                } else {
+                    // Web app buttons
+                    const liveBtn = p.liveUrl !== '#'
+                        ? `<a href="${p.liveUrl}" target="_blank" class="btn-sm btn-sm-primary"><i class="fas fa-external-link-alt"></i> Live</a>`
+                        : `<button class="btn-sm btn-sm-primary" onclick="showNotif('${p.title} — Coming soon!','info')"><i class="fas fa-clock"></i> Coming Soon</button>`;
+                    const codeBtn = p.githubUrl !== '#'
+                        ? `<a href="${p.githubUrl}" target="_blank" class="btn-sm btn-sm-outline"><i class="fab fa-github"></i> Code</a>`
+                        : `<button class="btn-sm btn-sm-outline" onclick="showNotif('Source code coming soon!','info')"><i class="fab fa-github"></i> Code</button>`;
+                    buttonsHtml = liveBtn + codeBtn;
+                }
+
+                card.innerHTML = `
+                    <div class="project-img-wrap">
+                        ${imageHtml}
+                        <div class="project-category-badge">${p.category === 'mobile' ? 'Mobile App' : 'Web App'}</div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-title">${p.title}</div>
+                        <p class="project-desc">${p.description}</p>
+                        <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+                        <div class="project-buttons">${buttonsHtml}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /* === FILTER BUTTONS === */
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.getAttribute('data-filter');
+                renderProjects(currentFilter);
+            });
+        });
+
+        /* === INIT === */
+        renderProjects('all');
+
+        /* === CURSOR === */
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+        });
+        function animateRing() {
+            ringX += (mouseX - ringX) * 0.12; ringY += (mouseY - ringY) * 0.12;
+            ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
+
+        /* === NAVBAR SCROLL === */
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) document.getElementById('navbar').classList.add('scrolled');
+            else document.getElementById('navbar').classList.remove('scrolled');
+        });
+
+        /* === HAMBURGER === */
+        const ham = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        ham.addEventListener('click', () => { ham.classList.toggle('open'); navLinks.classList.toggle('open'); });
+
+        /* === NOTIFICATION === */
+        function showNotif(msg, type = 'info') {
+            const el = document.getElementById('notif');
+            const icon = document.getElementById('notifIcon');
+            document.getElementById('notifText').textContent = msg;
+            icon.className = type === 'success' ? 'fas fa-check-circle notif-icon' : 'fas fa-info-circle notif-icon';
+            icon.style.color = '#8EB69B';
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3500);
+        }
+
+        /* === RIPPLE === */
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-sm');
+            if (!btn) return;
+            const r = document.createElement('span');
+            const rect = btn.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height) * 1.5;
+            r.style.cssText = `position:absolute;width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;border-radius:50%;background:rgba(255,255,255,0.15);transform:scale(0);animation:rippleAnim 0.5s ease;pointer-events:none;z-index:1;`;
+            btn.style.position = 'relative'; btn.style.overflow = 'hidden';
+            btn.appendChild(r);
+            setTimeout(() => r.remove(), 600);
+        });
+        const rs = document.createElement('style');
+        rs.textContent = '@keyframes rippleAnim{to{transform:scale(2.5);opacity:0;}}';
+        document.head.appendChild(rs);
+    </script>
+</body>
+</html>
