@@ -871,7 +871,7 @@
                     </div>
                 </div>
                 <div class="contact-form reveal reveal-delay-1">
-                    <form id="contactForm">
+                    <form id="contactForm" action="https://formspree.io/f/xnjbgddj" method="POST">
                         <div class="form-group">
                             <label for="name">Full Name</label>
                             <input type="text" id="name" name="name" placeholder="Your full name" required>
@@ -1021,25 +1021,9 @@
 
         /* === CONTACT FORM === */
         document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = this.name.value.trim();
-            const email = this.email.value.trim();
-            const message = this.message.value.trim();
-            const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!name || !email || !message) { showNotif('Please fill all fields.', 'error'); return; }
-            if (!emailRe.test(email)) { showNotif('Please enter a valid email.', 'error'); return; }
-
             const btn = this.querySelector('button[type=submit]');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             btn.disabled = true;
-
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-                btn.disabled = false;
-                this.reset();
-                showNotif('Message sent! I\'ll get back to you soon.', 'success');
-            }, 1500);
         });
 
         /* === NOTIFICATION === */
