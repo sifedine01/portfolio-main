@@ -127,6 +127,12 @@
             min-height: 100vh; display: flex; align-items: center;
             position: relative; overflow: hidden; padding-top: 80px;
         }
+        .hero-section::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 150px;
+            background: linear-gradient(to bottom, transparent, var(--c1));
+            pointer-events: none; z-index: 1;
+        }
         .hero-bg-orb {
             position: absolute; border-radius: 50%; pointer-events: none;
             filter: blur(80px); opacity: 0.25;

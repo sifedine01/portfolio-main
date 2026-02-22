@@ -36,7 +36,8 @@
         .back-btn:hover{background:rgba(142,182,155,0.2);border-color:var(--c5);}
 
         /* Hero */
-        .gallery-hero{padding:120px 0 5px;position:relative;overflow:hidden;}
+        .gallery-hero{padding:120px 0 25px;position:relative;overflow:hidden;}
+        .gallery-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,transparent,var(--c1));pointer-events:none;z-index:1;}
         .hero-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.2;pointer-events:none;}
         .hero-orb-1{width:400px;height:400px;background:var(--c4);top:-80px;right:-80px;animation:float-orb 8s ease-in-out infinite;}
         @keyframes float-orb{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-20px);}}
@@ -135,13 +136,18 @@
             ]
         },
         {
-            id: 11, title: "Food Delivery App", category: "mobile",
-            icon: "fas fa-utensils",
-            tags: ["React Native", "Google Maps", "Stripe", "Firebase"],
-            githubUrl: "#", apkUrl: null,
-            galleryDescription: "A complete food delivery platform with real-time order tracking, payment integration, and a restaurant management system. Delivers a smooth, fast ordering experience.",
-            galleryFeatures: ["Real-time Tracking", "Stripe Payments", "Restaurant Dashboard", "Push Notifications", "Order History", "Ratings & Reviews"],
-            gallery: []
+            id: 11, title: "Walema - Water Tracking App", category: "mobile",
+            icon: "./myPic/walemaApp/walema_logo.png",
+            tags: ["Kotlin", "Android", "Firebase", "Material Design"],
+            githubUrl: "#", apkUrl: "./apk/walema.apk",
+            galleryDescription: "A comprehensive hydration tracking app that helps users monitor their daily water intake with personalized goals, smart reminders, and detailed analytics. Built with Kotlin and Firebase for real-time data synchronization and user authentication.",
+            galleryFeatures: ["Daily Water Tracking", "Progress Analytics", "Smart Reminders", "Custom Drink Types", "Goal History", "Firebase Authentication"],
+            gallery: [
+                "./myPic/walemaApp/walema_login.jpeg",
+                "./myPic/walemaApp/walema_main.jpeg",
+                "./myPic/walemaApp/walema_goals.jpeg",
+                "./myPic/walemaApp/walema_statics.jpeg"
+            ]
         },
         {
             id: 12, title: "Social Media App", category: "mobile",

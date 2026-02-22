@@ -81,6 +81,12 @@
             position: relative;
             overflow: hidden;
         }
+        .page-hero::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 150px;
+            background: linear-gradient(to bottom, transparent, var(--c1));
+            pointer-events: none; z-index: 1;
+        }
         .page-hero-orb {
             position: absolute; border-radius: 50%; pointer-events: none;
             filter: blur(80px); opacity: 0.2;
@@ -297,15 +303,20 @@
                 galleryFeatures: ["Real-time GPS Tracking", "Automated Fare Calculation", "Ride Timer & Distance Tracking", "Full-Screen Meter Display", "Driver Profile Management", "Firebase Authentication & Firestore"]
             },
             {
-                id: 11, title: "Food Delivery App", category: "mobile",
-                description: "Complete food delivery platform with real-time tracking, payment integration, and restaurant management system.",
-                image: null, icon: "fas fa-utensils",
-                tags: ["React Native", "Google Maps", "Stripe", "Firebase"],
+                id: 11, title: "Walema - Water Tracking App", category: "mobile",
+                description: "A comprehensive hydration tracking app that helps users monitor their daily water intake with personalized goals, smart reminders, and detailed analytics. Built with Kotlin and Firebase for real-time data synchronization and user authentication.",
+                image: "./myPic/walemaApp/walema_profile.jpeg", icon: "./myPic/walemaApp/walema_logo.png",
+                tags: ["Kotlin", "Android", "Firebase", "Material Design"],
                 liveUrl: "#", githubUrl: "#",
-                apkUrl: null,
-                gallery: [],
-                galleryDescription: "A complete food delivery platform with real-time order tracking, payment integration, and a restaurant management system. Delivers a smooth, fast ordering experience.",
-                galleryFeatures: ["Real-time Tracking", "Stripe Payments", "Restaurant Dashboard", "Push Notifications", "Order History", "Ratings & Reviews"]
+                apkUrl: "./apk/walema.apk",
+                gallery: [
+                    "./myPic/walemaApp/walema_login.jpeg",
+                    "./myPic/walemaApp/walema_main.jpeg",
+                    "./myPic/walemaApp/walema_goals.jpeg",
+                    "./myPic/walemaApp/walema_statics.jpeg"
+                ],
+                galleryDescription: "A comprehensive hydration tracking app that helps users monitor their daily water intake with personalized goals, smart reminders, and detailed analytics. Built with Kotlin and Firebase for real-time data synchronization and user authentication.",
+                galleryFeatures: ["Daily Water Tracking", "Progress Analytics", "Smart Reminders", "Custom Drink Types", "Goal History", "Firebase Authentication"]
             },
             {
                 id: 12, title: "Social Media App", category: "mobile",
